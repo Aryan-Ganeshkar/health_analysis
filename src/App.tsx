@@ -1,25 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext } from 'react';
 import './App.css';
+import ShowHealthData from './component/ShowHealthData/ShowHealthData';
+import HealthDataContext, { HealthDataContextWrapper } from './context/HealthDataContext';
+import EditHealthData from './component/EditHealthData/EditHealthData';
+import { EDIT, VIEW } from './store/store-type';
+import MainComponents from './component/MainComponents/MainComponents';
+
+
+import { createBrowserRouter , RouterProvider} from "react-router-dom";
+import HomePage from './component/HomePage/HomePage';
+import Header from './Header/Header';
+import RootComp from './RootComp/RootComp';
+
+const router = createBrowserRouter([
+  {
+    path:'/',
+    element: <RootComp />,
+    children: [
+      {
+        path:'/',
+        element:<HomePage />
+      },
+      {
+        path:'/main',
+        element:<MainComponents />
+      },
+      {
+        path:'/edit/:userid',
+        element:<EditHealthData />
+      }
+    ]
+  },
+  
+])
 
 function App() {
+
+  const healthContext = useContext(HealthDataContext);
+
+  const {currentPageState} = healthContext;
+    console.log('App currentPageState', currentPageState);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <HealthDataContextWrapper>
+        <RouterProvider router={router} />
+          {/* <MainComponents /> */}
+      </HealthDataContextWrapper>
   );
 }
 
